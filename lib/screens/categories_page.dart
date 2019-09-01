@@ -15,28 +15,49 @@ class Categories extends StatefulWidget {
 
 class _CategoriesState extends State<Categories> {
   Future<File> image;
+  int noOfCategories;
+  int noOfImagesInCategory;
+  List<FileSystemEntity> categories;
 
-  pickImageFrom(ImageSource source) {
+  pickImageFrom(ImageSource source) async {
     setState(() {
       image = ImagePicker.pickImage(source: source);
+    });
+
+    Future<File> newImage;
+    Directory curr = await getExternalStorageDirectory();
+    await image.then((img) {
+      newImage = img.copy(join(curr.path, 'A') + '/image1.png');
+    });
+
+    setState(() {
+      image = newImage;
     });
   }
 
   Future<void> createDir({@required String dirName}) async {
     Directory externalStorageDirectory = await getExternalStorageDirectory();
     var dir = Directory(join(externalStorageDirectory.path, dirName));
-    print(dir.path);
     bool dirExists = await dir.exists();
     if (!dirExists) {
       dir.create(recursive: true);
     }
   }
 
-  Future<int> noOfCategories() async {
+  void setNoOfCategories() async {
+    Directory externalStorageDirectory = await getExternalStorageDirectory();
+    var current = Directory(externalStorageDirectory.path);
+    categories = current.listSync();
+    print(categories.length);
+    noOfCategories = int.parse(categories.length.toString());
+  }
+
+  void setNoOfImagesInCategory() async {
     Directory externalStorageDirectory = await getExternalStorageDirectory();
     List cat = externalStorageDirectory.listSync();
-    print(cat.length);
-    return cat.length;
+    for (var i in cat) {
+      print(i.toString());
+    }
   }
 
   @override
@@ -45,7 +66,8 @@ class _CategoriesState extends State<Categories> {
     createDir(dirName: 'B');
     createDir(dirName: 'C');
     createDir(dirName: 'D');
-    print(noOfCategories());
+    setNoOfCategories();
+    setNoOfImagesInCategory();
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -75,36 +97,52 @@ class _CategoriesState extends State<Categories> {
             opacity: 0.8,
           ),
         ),
-        body: Center(
-          child: Column(
-            children: <Widget>[
-              FutureBuilder<File>(
-                future: image,
-                builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done &&
-                      snapshot.data != null) {
-                    return Image.file(
-                      snapshot.data,
-                      width: 300,
-                      height: 300,
-                    );
-                  } else if (snapshot.error != null) {
-                    return const Text(
-                      'Error Picking Image',
-                      textAlign: TextAlign.center,
-                    );
-                  } else {
-                    return const Text(
-                      'No Image Selected',
-                      textAlign: TextAlign.center,
-                    );
-                  }
-                },
-              )
-            ],
+        body: GridView.count(
+          crossAxisCount: 3,
+          children: List.generate(
+            noOfCategories,
+            (index) {
+              return GridTile(
+                child: Center(
+                  child: Text(
+                    categories[index]
+                        .toString()
+                        .substring(71, categories[index].toString().length - 1),
+                    style: kDocyardStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              );
+            },
           ),
+          crossAxisSpacing: 4.0,
+          mainAxisSpacing: 4.0,
         ),
       ),
     );
   }
 }
+
+//              FutureBuilder<File>(
+//                future: image,
+//                builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
+//                  if (snapshot.connectionState == ConnectionState.done &&
+//                      snapshot.data != null) {
+//                    return Image.file(
+//                      snapshot.data,
+//                      width: 300,
+//                      height: 300,
+//                    );
+//                  } else if (snapshot.error != null) {
+//                    return const Text(
+//                      'Error Picking Image',
+//                      textAlign: TextAlign.center,
+//                    );
+//                  } else {
+//                    return const Text(
+//                      'No Image Selected',
+//                      textAlign: TextAlign.center,
+//                    );
+//                  }
+//                },
+//              )
