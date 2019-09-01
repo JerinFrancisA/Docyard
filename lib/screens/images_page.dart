@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
-import 'package:flutter_share_file/flutter_share_file.dart';
+//import 'package:flutter_share_file/flutter_share_file.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:share_extend/share_extend.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class ImagesPage extends StatefulWidget {
   static const routeName = 'ImagesPage';
@@ -23,7 +26,44 @@ class _ImagesPageState extends State<ImagesPage> {
   Future<File> image;
   List imagesList;
   int noOfImages = 1;
+  var imagePath;
+  File testFile;
+  CompressAndCrop(ImageSource source) async {
+  File _image;
 
+
+    var imagee = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+
+
+    File croppedFile = await ImageCropper.cropImage(
+      sourcePath: imagee.path,
+      ratioX: 1.0,
+      ratioY: 1.0,
+      maxWidth: 512,
+      maxHeight: 512,
+    );
+
+    var compressed = await FlutterImageCompress.compressAndGetFile(
+      croppedFile.path,
+      croppedFile.path,
+      quality: 50,
+    );
+  setNoOfImagesInCategory(widget.dirName);
+  Future<File> newImage;
+  Directory curr = await getExternalStorageDirectory();
+  await image.then((img) {
+    newImage =
+        img.copy(join(curr.path, widget.dirName) + '/image$noOfImages.png');
+  });
+
+
+    setState(() {
+      _image = compressed;
+      image = newImage;
+    });
+
+  }
   pickImageFrom(ImageSource source) async {
     setState(() {
       image = ImagePicker.pickImage(source: source);
@@ -83,6 +123,12 @@ class _ImagesPageState extends State<ImagesPage> {
                 pickImageFrom(ImageSource.gallery);
               },
             ),
+            IconButton(
+              icon: Icon(Icons.crop),
+              onPressed: () {
+                CompressAndCrop(ImageSource.gallery);
+              }
+            ),
           ],
           actionsIconTheme: IconThemeData(
             color: kDocyardBackgroundColor,
@@ -95,7 +141,7 @@ class _ImagesPageState extends State<ImagesPage> {
             crossAxisCount: 3,
             children: List.generate(
               imagesList.length ?? 18,
-              (index) {
+                  (index) {
                 return GestureDetector(
                   onTap: () async {
                     showDialog(
@@ -112,16 +158,23 @@ class _ImagesPageState extends State<ImagesPage> {
                             GestureDetector(
                               onTap: () async {
                                 Directory externalStorageDirectory =
-                                    await getExternalStorageDirectory();
-                                print(imagesList[index].toString().replaceAll(
-                                    (externalStorageDirectory.path +
-                                        '/${widget.dirName}/'), ''));
-                                FlutterShareFile.shareImage(
-                                    externalStorageDirectory.path +
-                                        '/${widget.dirName}',
-                                    imagesList[index].toString().replaceAll(
-                                    (externalStorageDirectory.path +
-                                    '/${widget.dirName}/'), ''));
+                                await getExternalStorageDirectory();
+                                print(imagesList[index].toString());
+
+
+//                                FlutterShareFile.shareImage(
+//                                    externalStorageDirectory.path +
+//                                        '/${widget.dirName}',
+//                                    imagesList[index].toString().replaceAll(
+//                                        (externalStorageDirectory.path +
+//                                            '/${widget.dirName}/'), ''));
+
+                                ShareExtend.share(imagesList[index].toString(), "file");
+//                                 testFile = new File(imagePath);
+//                                if (!await testFile.exists()) {
+//                                  print("doesnt exist");
+//                                }
+//                                ShareExtend.share(testFile.path, "file");
                                 Navigator.pop(context);
                               },
                               child: Container(
@@ -145,7 +198,7 @@ class _ImagesPageState extends State<ImagesPage> {
                                 FlutterWebBrowser.openWebPage(
                                     url: 'https://fotoram.io/editor/#resize',
                                     androidToolbarColor:
-                                        Colors.indigo.shade600);
+                                    Colors.indigo.shade600);
                               },
                               child: Container(
                                 decoration: BoxDecoration(
