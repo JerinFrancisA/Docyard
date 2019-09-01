@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:doc_yard/custom_widgets/input_box.dart';
 import 'package:path/path.dart';
 import 'images_page.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class Categories extends StatefulWidget {
   static const routeName = 'Categories';
@@ -15,12 +16,13 @@ class Categories extends StatefulWidget {
 }
 
 class _CategoriesState extends State<Categories> {
-  int noOfCategories = 18;
+  int noOfCategories = 0;
   List<FileSystemEntity> categories = [];
+  bool showSpinner = false;
 
   var inputCategoryName = InputBox();
 
-  void createDir({@required String dirName}) async {
+  Future<void> createDir({@required String dirName}) async {
     Directory externalStorageDirectory = await getExternalStorageDirectory();
     var dir = Directory(join(externalStorageDirectory.path, dirName));
     bool dirExists = await dir.exists();
@@ -59,49 +61,58 @@ class _CategoriesState extends State<Categories> {
           centerTitle: true,
           backgroundColor: kDocyardAppBarColor,
         ),
-        body: Scrollbar(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: GridView.count(
-              crossAxisCount: 3,
-              children: List.generate(
-                noOfCategories,
-                (index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return ImagesPage(
-                                dirName: categories[index].toString().substring(
-                                    71, categories[index].toString().length - 1));
-                          },
-                        ),
-                      );
-                    },
-                    child: GridTile(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: index%2 == 0? kDocyardButton1Color : kDocyardButton2Color.withOpacity(0.6),
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.circular(4.0),
-                        ),
-                        child: Center(
-                          child: Text(
-                            categories[index].toString().substring(
-                                71, categories[index].toString().length - 1),
-                            style: kDocyardStyle,
-                            textAlign: TextAlign.center,
+        body: ModalProgressHUD(
+          inAsyncCall: showSpinner,
+          child: Scrollbar(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GridView.count(
+                crossAxisCount: 3,
+                children: List.generate(
+                  noOfCategories,
+                  (index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return ImagesPage(
+                                  dirName: categories[index]
+                                      .toString()
+                                      .substring(
+                                          71,
+                                          categories[index].toString().length -
+                                              1));
+                            },
+                          ),
+                        );
+                      },
+                      child: GridTile(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: index % 2 == 0
+                                ? kDocyardButton1Color
+                                : kDocyardButton2Color.withOpacity(0.6),
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                          child: Center(
+                            child: Text(
+                              categories[index].toString().substring(
+                                  71, categories[index].toString().length - 1),
+                              style: kDocyardStyle,
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
+                crossAxisSpacing: 8.0,
+                mainAxisSpacing: 8.0,
               ),
-              crossAxisSpacing: 8.0,
-              mainAxisSpacing: 8.0,
             ),
           ),
         ),
@@ -117,17 +128,20 @@ class _CategoriesState extends State<Categories> {
                 return AlertDialog(
                   title: Text(
                     'ADD YOUR CATEGORY HERE',
-                    style: kDocyardStyle.copyWith(fontSize: 14.0),
+                    style: kDocyardStyle.copyWith(fontSize: 14.0, fontWeight: FontWeight.w700),
                   ),
                   content: inputCategoryName,
                   actions: <Widget>[
                     GestureDetector(
-                      onTap: () {
+                      onTap: () async {
                         setState(() {
-                          createDir(dirName: inputCategoryName.input);
+                          showSpinner = true;
+                        });
+                        await createDir(dirName: inputCategoryName.input);
+                        setState(() {
+                          showSpinner = false;
                         });
                         Navigator.pop(context);
-                        initState();
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -145,6 +159,7 @@ class _CategoriesState extends State<Categories> {
                       ),
                     ),
                   ],
+                  backgroundColor: kDocyardBackgroundColor,
                 );
               },
             );

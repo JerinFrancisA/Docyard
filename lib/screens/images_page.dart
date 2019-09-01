@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
+import 'package:flutter_share_file/flutter_share_file.dart';
+import 'package:flutter_web_browser/flutter_web_browser.dart';
 
 class ImagesPage extends StatefulWidget {
   static const routeName = 'ImagesPage';
@@ -31,8 +33,8 @@ class _ImagesPageState extends State<ImagesPage> {
     Future<File> newImage;
     Directory curr = await getExternalStorageDirectory();
     await image.then((img) {
-      newImage = img.copy(
-          join(curr.path, widget.dirName) + '/image$noOfImages.png');
+      newImage =
+          img.copy(join(curr.path, widget.dirName) + '/image$noOfImages.png');
     });
 
     setState(() {
@@ -44,13 +46,9 @@ class _ImagesPageState extends State<ImagesPage> {
     Directory externalStorageDirectory = await getExternalStorageDirectory();
     var subFolder = Directory(externalStorageDirectory.path + '/$dirName');
     imagesList = subFolder.listSync();
-    for (var i in imagesList) {
-      print(i.toString());
-    }
     setState(() {
       noOfImages = imagesList.length;
     });
-    print(noOfImages);
   }
 
   @override
@@ -98,16 +96,91 @@ class _ImagesPageState extends State<ImagesPage> {
             children: List.generate(
               imagesList.length ?? 18,
               (index) {
-                return GridTile(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: imagesList.length % 2 == 0 ? kDocyardButton1Color : kDocyardButton2Color,
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(4.0),
-                    ),
-                    child: Image.file(
-                      imagesList[index],
-                      fit: BoxFit.cover,
+                return GestureDetector(
+                  onTap: () async {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text(
+                            'CHOOSE OPTION',
+                            style: kDocyardStyle.copyWith(
+                                fontSize: 14.0, fontWeight: FontWeight.w700),
+                          ),
+                          actions: <Widget>[
+                            GestureDetector(
+                              onTap: () async {
+                                Directory externalStorageDirectory =
+                                    await getExternalStorageDirectory();
+                                print(imagesList[index].toString().replaceAll(
+                                    (externalStorageDirectory.path +
+                                        '/${widget.dirName}/'), ''));
+                                FlutterShareFile.shareImage(
+                                    externalStorageDirectory.path +
+                                        '/${widget.dirName}',
+                                    imagesList[index].toString().replaceAll(
+                                    (externalStorageDirectory.path +
+                                    '/${widget.dirName}/'), ''));
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  color: kDocyardAppBarColor,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(14.0),
+                                  child: Text(
+                                    'SHARE',
+                                    style: kDocyardStyle.copyWith(
+                                        color: Colors.white, fontSize: 16.0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                Navigator.pop(context);
+                                FlutterWebBrowser.openWebPage(
+                                    url: 'https://fotoram.io/editor/#resize',
+                                    androidToolbarColor:
+                                        Colors.indigo.shade600);
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  color: kDocyardAppBarColor,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(14.0),
+                                  child: Text(
+                                    'RESIZE',
+                                    style: kDocyardStyle.copyWith(
+                                        color: Colors.white, fontSize: 16.0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                          backgroundColor: kDocyardBackgroundColor,
+                        );
+                      },
+                    );
+                  },
+                  child: GridTile(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: imagesList.length % 2 == 0
+                            ? kDocyardButton1Color
+                            : kDocyardButton2Color,
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      child: Image.file(
+                        imagesList[index],
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 );
@@ -121,27 +194,3 @@ class _ImagesPageState extends State<ImagesPage> {
     );
   }
 }
-
-//FutureBuilder<File>(
-////                    future: imagesList[index],
-//builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
-//if (snapshot.connectionState == ConnectionState.done &&
-//snapshot.data != null) {
-//return Image.memory(
-//imagesList[index],
-//width: 300,
-//height: 300,
-//);
-//} else if (snapshot.error != null) {
-//return const Text(
-//'Error Picking Image',
-//textAlign: TextAlign.center,
-//);
-//} else {
-//return const Text(
-//'No Image Selected',
-//textAlign: TextAlign.center,
-//);
-//}
-//},
-//)

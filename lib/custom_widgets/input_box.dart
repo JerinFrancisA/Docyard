@@ -14,8 +14,8 @@ class _InputBoxState extends State<InputBox> {
     return TextField(
       style: kDocyardStyle.copyWith(
         letterSpacing: 4.0,
-        fontWeight: FontWeight.w500,
-        fontSize: 22.0,
+        fontWeight: FontWeight.w700,
+        fontSize: 24.0,
       ),
       cursorColor: kDocyardButton1Color,
       decoration: InputDecoration(
@@ -29,7 +29,7 @@ class _InputBoxState extends State<InputBox> {
           letterSpacing: 3.0,
         ),
         filled: true,
-        fillColor: kDocyardButton2Color,
+        fillColor: kDocyardButton1Color.withOpacity(0.4),
         contentPadding: EdgeInsets.all(6.0),
         border: InputBorder.none,
       ),
