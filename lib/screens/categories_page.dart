@@ -78,12 +78,10 @@ class _CategoriesState extends State<Categories> {
                           MaterialPageRoute(
                             builder: (context) {
                               return ImagesPage(
-                                  dirName: categories[index]
-                                      .toString()
-                                      .substring(
-                                          71,
-                                          categories[index].toString().length -
-                                              1));
+                                dirName: categories[index].toString().substring(
+                                    71,
+                                    categories[index].toString().length - 1),
+                              );
                             },
                           ),
                         );
@@ -128,7 +126,8 @@ class _CategoriesState extends State<Categories> {
                 return AlertDialog(
                   title: Text(
                     'ADD YOUR CATEGORY HERE',
-                    style: kDocyardStyle.copyWith(fontSize: 14.0, fontWeight: FontWeight.w700),
+                    style: kDocyardStyle.copyWith(
+                        fontSize: 14.0, fontWeight: FontWeight.w700),
                   ),
                   content: inputCategoryName,
                   actions: <Widget>[
