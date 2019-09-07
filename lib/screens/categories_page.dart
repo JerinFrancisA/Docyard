@@ -60,6 +60,26 @@ class _CategoriesState extends State<Categories> {
           automaticallyImplyLeading: false,
           centerTitle: true,
           backgroundColor: kDocyardAppBarColor,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.refresh),
+              onPressed: () {
+                setState(() {
+                  showSpinner = true;
+                });
+                setState(() {
+                  showSpinner = true;
+                });
+                setState(() {
+                  showSpinner = false;
+                });
+              },
+            ),
+          ],
+          actionsIconTheme: IconThemeData(
+            color: kDocyardBackgroundColor,
+            opacity: 0.8,
+          ),
         ),
         body: ModalProgressHUD(
           inAsyncCall: showSpinner,

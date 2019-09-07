@@ -64,7 +64,7 @@ class _ImagesPageState extends State<ImagesPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'Your Images',
+            widget.dirName,
             style: kDocyardStyle,
           ),
           automaticallyImplyLeading: false,
@@ -115,14 +115,19 @@ class _ImagesPageState extends State<ImagesPage> {
                                   onTap: () async {
                                     Directory externalStorageDirectory =
                                         await getExternalStorageDirectory();
+                                    Directory dir =
+                                    await getApplicationDocumentsDirectory();
+                                    print(dir.path);
                                     FlutterShareFile.shareImage(
+                                        '/storage/emulated/0/Android/data/com.fawcis.doc_yard/files/${widget.dirName}',
                                         imagesList[index]
                                             .toString()
-                                            .replaceAll('File: \'', '').replaceAll('\'', ''),
-                                        imagesList[index].toString().replaceAll(
-                                            (externalStorageDirectory.path +
-                                                '/${widget.dirName}/'),
-                                            ''));
+                                            .replaceAll(
+                                                (externalStorageDirectory.path +
+                                                    '/${widget.dirName}/'),
+                                                '')
+                                            .replaceAll('File: \'', '')
+                                            .replaceAll('\'', ''));
                                     Navigator.pop(context);
                                   },
                                   child: Container(
@@ -147,7 +152,8 @@ class _ImagesPageState extends State<ImagesPage> {
                                     Directory imagePath = Directory(
                                         imagesList[index]
                                             .toString()
-                                            .replaceAll('File: \'', '').replaceAll('\'', ''));
+                                            .replaceAll('File: \'', '')
+                                            .replaceAll('\'', ''));
                                     setState(() {
                                       imagePath.deleteSync(recursive: true);
                                       imageCache.clear();
