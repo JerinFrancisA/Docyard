@@ -151,7 +151,7 @@ class _ImagesPageState extends State<ImagesPage> {
                                             .replaceAll('File: \'', '').replaceAll('\'', ''));
                                     setState(() {
                                       imagePath.deleteSync(recursive: true);
-
+                                      imageCache.clear();
                                     });
                                     Navigator.pop(context);
                                   },
