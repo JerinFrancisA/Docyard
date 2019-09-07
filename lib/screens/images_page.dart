@@ -7,7 +7,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:flutter_share_file/flutter_share_file.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
-import 'package:flutter/services.dart';
 
 class ImagesPage extends StatefulWidget {
   static const routeName = 'ImagesPage';
