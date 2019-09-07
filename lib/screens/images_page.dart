@@ -146,21 +146,15 @@ class _ImagesPageState extends State<ImagesPage> {
                                     ),
                                   ),
                                 ),
+                                SizedBox(height: 20),
                                 GestureDetector(
                                   onTap: () async {
                                     Directory externalStorageDirectory =
                                         await getExternalStorageDirectory();
-                                    print(imagesList[index]
-                                        .toString()
-                                        .replaceAll(
-                                            (externalStorageDirectory.path +
-                                                '/${widget.dirName}/'),
-                                            ''));
                                     Directory imagePath = Directory(
-                                        imagesList[index].toString().replaceAll(
-                                            (externalStorageDirectory.path +
-                                                '/${widget.dirName}/'),
-                                            ''));
+                                        imagesList[index]
+                                            .toString()
+                                            .replaceAll('File: \'', '').replaceAll('\'', ''));
                                     imagePath.deleteSync(recursive: true);
                                     setState(() {});
                                     Navigator.pop(context);
@@ -181,6 +175,7 @@ class _ImagesPageState extends State<ImagesPage> {
                                     ),
                                   ),
                                 ),
+                                SizedBox(height: 20),
                                 GestureDetector(
                                   onTap: () async {
                                     Navigator.pop(context);
@@ -199,6 +194,27 @@ class _ImagesPageState extends State<ImagesPage> {
                                       padding: const EdgeInsets.all(14.0),
                                       child: Text(
                                         'RESIZE',
+                                        style: kDocyardStyle.copyWith(
+                                            color: Colors.white,
+                                            fontSize: 16.0),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 20),
+                                GestureDetector(
+                                  onTap: () async {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      color: kDocyardAppBarColor,
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(14.0),
+                                      child: Text(
+                                        'DISMISS',
                                         style: kDocyardStyle.copyWith(
                                             color: Colors.white,
                                             fontSize: 16.0),
