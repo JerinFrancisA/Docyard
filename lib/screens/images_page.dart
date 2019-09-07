@@ -109,58 +109,104 @@ class _ImagesPageState extends State<ImagesPage> {
                                 fontSize: 14.0, fontWeight: FontWeight.w700),
                           ),
                           actions: <Widget>[
-                            GestureDetector(
-                              onTap: () async {
-                                Directory externalStorageDirectory =
-                                    await getExternalStorageDirectory();
-                                print(imagesList[index].toString().replaceAll(
-                                    (externalStorageDirectory.path +
-                                        '/${widget.dirName}/'), ''));
-                                FlutterShareFile.shareImage(
-                                    externalStorageDirectory.path +
-                                        '/${widget.dirName}',
-                                    imagesList[index].toString().replaceAll(
-                                    (externalStorageDirectory.path +
-                                    '/${widget.dirName}/'), ''));
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  color: kDocyardAppBarColor,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(14.0),
-                                  child: Text(
-                                    'SHARE',
-                                    style: kDocyardStyle.copyWith(
-                                        color: Colors.white, fontSize: 16.0),
+                            Column(
+                              children: <Widget>[
+                                GestureDetector(
+                                  onTap: () async {
+                                    Directory externalStorageDirectory =
+                                        await getExternalStorageDirectory();
+                                    print(imagesList[index]
+                                        .toString()
+                                        .replaceAll(
+                                            (externalStorageDirectory.path +
+                                                '/${widget.dirName}/'),
+                                            ''));
+                                    FlutterShareFile.shareImage(
+                                        externalStorageDirectory.path +
+                                            '/${widget.dirName}',
+                                        imagesList[index].toString().replaceAll(
+                                            (externalStorageDirectory.path +
+                                                '/${widget.dirName}/'),
+                                            ''));
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      color: kDocyardAppBarColor,
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(14.0),
+                                      child: Text(
+                                        'SHARE',
+                                        style: kDocyardStyle.copyWith(
+                                            color: Colors.white,
+                                            fontSize: 16.0),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                Navigator.pop(context);
-                                FlutterWebBrowser.openWebPage(
-                                    url: 'https://fotoram.io/editor/#resize',
-                                    androidToolbarColor:
-                                        Colors.indigo.shade600);
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  color: kDocyardAppBarColor,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(14.0),
-                                  child: Text(
-                                    'RESIZE',
-                                    style: kDocyardStyle.copyWith(
-                                        color: Colors.white, fontSize: 16.0),
+                                GestureDetector(
+                                  onTap: () async {
+                                    Directory externalStorageDirectory =
+                                        await getExternalStorageDirectory();
+                                    print(imagesList[index]
+                                        .toString()
+                                        .replaceAll(
+                                            (externalStorageDirectory.path +
+                                                '/${widget.dirName}/'),
+                                            ''));
+                                    Directory imagePath = Directory(
+                                        imagesList[index].toString().replaceAll(
+                                            (externalStorageDirectory.path +
+                                                '/${widget.dirName}/'),
+                                            ''));
+                                    imagePath.deleteSync(recursive: true);
+                                    setState(() {});
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      color: kDocyardAppBarColor,
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(14.0),
+                                      child: Text(
+                                        'DELETE',
+                                        style: kDocyardStyle.copyWith(
+                                            color: Colors.white,
+                                            fontSize: 16.0),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
+                                GestureDetector(
+                                  onTap: () async {
+                                    Navigator.pop(context);
+                                    FlutterWebBrowser.openWebPage(
+                                        url:
+                                            'https://fotoram.io/editor/#resize',
+                                        androidToolbarColor:
+                                            Colors.indigo.shade600);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      color: kDocyardAppBarColor,
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(14.0),
+                                      child: Text(
+                                        'RESIZE',
+                                        style: kDocyardStyle.copyWith(
+                                            color: Colors.white,
+                                            fontSize: 16.0),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                           backgroundColor: kDocyardBackgroundColor,
