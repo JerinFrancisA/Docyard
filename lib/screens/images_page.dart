@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:flutter_share_file/flutter_share_file.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
+import 'package:flutter/services.dart';
 
 class ImagesPage extends StatefulWidget {
   static const routeName = 'ImagesPage';
@@ -115,15 +116,10 @@ class _ImagesPageState extends State<ImagesPage> {
                                   onTap: () async {
                                     Directory externalStorageDirectory =
                                         await getExternalStorageDirectory();
-                                    print(imagesList[index]
-                                        .toString()
-                                        .replaceAll(
-                                            (externalStorageDirectory.path +
-                                                '/${widget.dirName}/'),
-                                            ''));
                                     FlutterShareFile.shareImage(
-                                        externalStorageDirectory.path +
-                                            '/${widget.dirName}',
+                                        imagesList[index]
+                                            .toString()
+                                            .replaceAll('File: \'', '').replaceAll('\'', ''),
                                         imagesList[index].toString().replaceAll(
                                             (externalStorageDirectory.path +
                                                 '/${widget.dirName}/'),
@@ -149,14 +145,14 @@ class _ImagesPageState extends State<ImagesPage> {
                                 SizedBox(height: 20),
                                 GestureDetector(
                                   onTap: () async {
-                                    Directory externalStorageDirectory =
-                                        await getExternalStorageDirectory();
                                     Directory imagePath = Directory(
                                         imagesList[index]
                                             .toString()
                                             .replaceAll('File: \'', '').replaceAll('\'', ''));
-                                    imagePath.deleteSync(recursive: true);
-                                    setState(() {});
+                                    setState(() {
+                                      imagePath.deleteSync(recursive: true);
+
+                                    });
                                     Navigator.pop(context);
                                   },
                                   child: Container(
