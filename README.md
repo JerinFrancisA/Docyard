@@ -26,7 +26,7 @@ This project is collaboratively developed by [Me](https://github.com/JerinFranci
 
 
 
-## Add new Categories !!
+## Add new Categories as shown !!
 
 ![02](https://user-images.githubusercontent.com/43045825/64152287-f7fd0700-ce49-11e9-9c6c-74bf2b2c071b.jpeg)
 
