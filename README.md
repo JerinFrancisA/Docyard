@@ -1,4 +1,6 @@
-# RentALL
+[![Build Status](https://travis-ci.org/dwyl/esta.svg?branch=master)](https://travis-ci.org/dwyl/esta)
+
+# Docyard
 
 An android application to store all your important documents which you access frequently. You need not skim through your whole phone to find them. Docyard lets to store them in a single place and you can access/share/resize them whenever you need. Many online application forms need you to resize the photos which you upload, which is a big task by itself, with Docyard you can resize them all !! No need to look around for resizing tools.  
 
