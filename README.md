@@ -17,7 +17,8 @@ This project is collaboratively developed by [Me](https://github.com/JerinFranci
 - [x] Share photos
 - [x] Resize photos
 - [x] Crop photos
-- [ ] Delete photos
+- [x] Delete photos
+- [ ] Export photos
 
 ### Screenshots
 
