@@ -19,6 +19,7 @@ This project is collaboratively developed by [Me](https://github.com/JerinFranci
 - [x] Crop photos
 - [x] Delete photos
 - [ ] Export photos
+- [ ] Custom Resizing
 
 ### Screenshots
 
